@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sunmi_printer_plus/enums.dart';
 import 'package:sunmi_printer_plus/sunmi_printer_plus.dart';
-import 'package:sunmi_printer_plus/sunmi_style.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -91,6 +90,7 @@ class _HomeState extends State<Home> {
             FloatingActionButton.extended(
               label: Text("NEXT: ${counter + 1}"),
               onPressed: () async {
+                //! print image
                 Future<Uint8List> readFileBytes(String path) async {
                   ByteData fileData = await rootBundle.load(path);
                   Uint8List fileUnit8List = fileData.buffer.asUint8List(
@@ -102,23 +102,28 @@ class _HomeState extends State<Home> {
                   return await readFileBytes(iconPath);
                 }
 
-                final imageData =
-                    await _getImageFromAsset("assets/sticker_white.png");
+                await SunmiPrinter.initPrinter();
 
+                Uint8List byte =
+                    await _getImageFromAsset('assets/images/dash.jpeg');
+                await SunmiPrinter.setAlignment(SunmiPrintAlign.CENTER);
+
+                await SunmiPrinter.startTransactionPrint(true);
+                await SunmiPrinter.printImage(byte);
+                await SunmiPrinter.lineWrap(2);
+                await SunmiPrinter.exitTransactionPrint(true);
+
+                // ! print text
                 setState(() {
                   counter++;
                 });
+
                 await SunmiPrinter.initPrinter();
                 await SunmiPrinter.startTransactionPrint(true);
-                await SunmiPrinter.printText(
-                  "No.${counter}",
-                  style: SunmiStyle(
-                    bold: true,
-                    fontSize: SunmiFontSize.XL,
-                    align: SunmiPrintAlign.CENTER,
-                  ),
-                );
-                await SunmiPrinter.printImage(imageData);
+                await SunmiPrinter.setCustomFontSize(20);
+                await SunmiPrinter.printText('No. $counter');
+                await SunmiPrinter.resetFontSize();
+                await SunmiPrinter.lineWrap(2);
                 await SunmiPrinter.exitTransactionPrint(true);
               },
             ),
