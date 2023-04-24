@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sunmi_printer_plus/enums.dart';
 import 'package:sunmi_printer_plus/sunmi_printer_plus.dart';
+import 'package:sunmi_printer_plus/sunmi_style.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -104,8 +105,8 @@ class _HomeState extends State<Home> {
 
                 await SunmiPrinter.initPrinter();
 
-                Uint8List byte =
-                    await _getImageFromAsset('assets/images/dash.jpeg');
+                Uint8List byte = await _getImageFromAsset(
+                    'assets/images/sticker_white.jpeg');
                 await SunmiPrinter.setAlignment(SunmiPrintAlign.CENTER);
 
                 await SunmiPrinter.startTransactionPrint(true);
@@ -120,8 +121,13 @@ class _HomeState extends State<Home> {
 
                 await SunmiPrinter.initPrinter();
                 await SunmiPrinter.startTransactionPrint(true);
-                await SunmiPrinter.setCustomFontSize(20);
-                await SunmiPrinter.printText('No. $counter');
+                await SunmiPrinter.setCustomFontSize(50);
+                await SunmiPrinter.printText('No. $counter',
+                    style: SunmiStyle(
+                      align: SunmiPrintAlign.CENTER,
+                      bold: true,
+                      fontSize: SunmiFontSize.XL,
+                    ));
                 await SunmiPrinter.resetFontSize();
                 await SunmiPrinter.lineWrap(2);
                 await SunmiPrinter.exitTransactionPrint(true);
