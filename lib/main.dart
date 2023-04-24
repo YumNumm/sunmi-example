@@ -122,7 +122,7 @@ class _HomeState extends State<Home> {
                 await SunmiPrinter.initPrinter();
                 await SunmiPrinter.startTransactionPrint(true);
                 await SunmiPrinter.setCustomFontSize(50);
-                await SunmiPrinter.printText('No. $counter',
+                await SunmiPrinter.printText('整理券番号 $counter 番',
                     style: SunmiStyle(
                       align: SunmiPrintAlign.CENTER,
                       bold: true,
